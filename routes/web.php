@@ -1,10 +1,5 @@
 <?php
 
-use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\Auth\ForgotPasswordController;
-use App\Http\Controllers\Auth\ResetPasswordController;
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
 /** for side bar menu active */
@@ -13,6 +8,13 @@ function set_active($route) {
         return in_array(Request::path(), $route) ? 'active' : '';
     }
     return Request::path() == $route ? 'active' : '';
+}
+/** for side bar menu show */
+function set_show($route) {
+    if (is_array($route )){
+        return in_array(Request::path(), $route) ? 'show' : '';
+    }
+    return Request::path() == $route ? 'show' : '';
 }
 
 Route::get('/', function () {
@@ -67,6 +69,29 @@ Route::group(['namespace' => 'App\Http\Controllers'],function()
     // -------------------------- main dashboard ----------------------//
     Route::controller(HomeController::class)->group(function () {
         Route::get('/home', 'index')->middleware('auth')->name('home');
+    });
+
+    // -------------------------- pages ----------------------//
+    Route::controller(AccountController::class)->group(function () {
+        Route::get('page/account', 'index')->middleware('auth')->name('page/account');
+    });
+
+    // ------------------------ e-commerce --------------------//
+    Route::controller(EcommerceController::class)->group(function () {
+        Route::get('product/create/page', 'productCreate')->middleware('auth')->name('product/create/page');
+        Route::get('product/overview/page', 'productOverview')->middleware('auth')->name('product/overview/page');
+        Route::get('product/list/page', 'productList')->middleware('auth')->name('product/list/page');
+        Route::get('product/grid/page', 'productGrid')->middleware('auth')->name('product/grid/page');
+        Route::get('shopping/cart/page', 'shoppingCart')->middleware('auth')->name('shopping/cart/page');
+        Route::get('ecommerce/checkout/page', 'ecommerceCheckout')->middleware('auth')->name('ecommerce/checkout/page');
+        Route::get('ecommerce/order/page', 'ecommerceOrder')->middleware('auth')->name('ecommerce/order/page');
+        Route::get('ecommerce/order/overview/page', 'orderOverView')->middleware('auth')->name('ecommerce/order/overview/page');
+    });
+
+    // ------------------------ User --------------------//
+    Route::controller(UserManagementController::class)->group(function () {
+        Route::get('user/list/page', 'userList')->middleware('auth')->name('user/list/page');
+        Route::get('get-users-data', 'getUsersData')->name('get-users-data'); /** get all data users */
     });
 });
 
