@@ -102,9 +102,6 @@
                             class="absolute h-40 left-10 xl:-left-10 top-32" data-aos="fade-down-right"
                             data-aos-delay="900" data-aos-easing="linear">
                         <div class="relative" data-aos="zoom-in" data-aos-delay="500">
-                            <button data-tooltip="default" data-tooltip-content="$199.99"
-                                class="absolute items-center justify-center hidden bg-white rounded-full size-8 xl:flex bottom-20 text-slate-800 left-20"><i
-                                    data-lucide="plus"></i></button>
                             <img src="assets/images/bulldozer.png" alt="" class="mx-auto">
                         </div>
                     </div>

@@ -20,8 +20,9 @@ class PoolController extends Controller
     public function index()
     {
         //
+        $identitas = 'pool';
         $kendaraans = Kendaraan::where('persetujuan', '=', 0)->paginate(10);
-        return view('kendaraan.index', compact('kendaraans'));        
+        return view('kendaraan.index', compact('kendaraans','identitas'));        
     }
 
     /**

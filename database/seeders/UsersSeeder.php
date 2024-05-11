@@ -24,15 +24,36 @@ class UsersSeeder extends Seeder
         ]);
         $admin->syncRoles('super-admin');
 
-        // Seed pool
-        $pool = User::create([
-            'name' => 'pool',
-            'username' => 'pool_user',
+        // Seed pool1
+        $pool1 = User::create([
+            'name' => 'pool1',
+            'username' => 'pool1_user',
             'gender' => 'male',
-            'email' => 'pool@pool.com',
+            'email' => 'pool1@pool1.com',
             'email_verified_at' => now(),
             'password' => bcrypt('password')
         ]);
-        $pool->syncRoles('pool');
+        
+        $pool1->syncRoles('pool');
+
+        $pool2 = User::create([
+            'name' => 'pool2',
+            'username' => 'pool2_user',
+            'gender' => 'male',
+            'email' => 'pool2@pool2.com',
+            'email_verified_at' => now(),
+            'password' => bcrypt('password')
+        ]);
+        $pool2->syncRoles('pool');
+
+        $pool3 = User::create([
+            'name' => 'pool3',
+            'username' => 'pool3_user',
+            'gender' => 'male',
+            'email' => 'pool3@pool3.com',
+            'email_verified_at' => now(),
+            'password' => bcrypt('password')
+        ]);
+        $pool3->syncRoles('pool');
     }
 }

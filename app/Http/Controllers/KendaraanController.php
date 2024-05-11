@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Kendaraan;
 use App\Exports\KendaraanExport;
+use App\Models\User;
 use Brian2694\Toastr\Facades\Toastr;
 use Carbon\Carbon;
 use Illuminate\Validation\ValidationException;
@@ -22,8 +23,10 @@ class KendaraanController extends Controller
     public function index()
     {
         //
+        $identitas = 'kendaraan';
+        $pool = User::role('pool')->get();
         $kendaraans = Kendaraan::where('status', '=', 1)->paginate(10);
-        return view('kendaraan.index', compact('kendaraans'));
+        return view('kendaraan.index', compact('kendaraans', 'identitas','pool'));
     }
 
     /**
