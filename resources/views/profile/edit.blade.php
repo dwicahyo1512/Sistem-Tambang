@@ -216,7 +216,7 @@
                                             Password ?</a>
                                     </div> --}}
                                     <div class="flex justify-end xl:col-span-6">
-                                        <button type="button"
+                                        <button type="submit"
                                             class="text-white bg-green-500 border-green-500 btn hover:text-white hover:bg-green-600 hover:border-green-600 focus:text-white focus:bg-green-600 focus:border-green-600 focus:ring focus:ring-green-100 active:text-white active:bg-green-600 active:border-green-600 active:ring active:ring-green-100 dark:ring-green-400/10">Change
                                             Password</button>
                                     </div>

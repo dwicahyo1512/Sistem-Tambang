@@ -30,8 +30,8 @@ Route::middleware('auth')->group(function () {
     Route::controller(KendaraanController::class)->group(function () {
         Route::resource('kendaraans', App\Http\Controllers\KendaraanController::class)->names('kendaraans');
         Route::get('/export-kendaraan', [KendaraanController::class, 'export'])->name('export-kendaraan');
-        Route::put('/setuju/{id}', [KendaraanController::class, 'setuju'])->name('setuju');
-        Route::put('/check/{id}', [KendaraanController::class, 'check'])->name('check');        
+        Route::get('/view-riwayat', [KendaraanController::class, 'riwayat'])->name('view-riwayat');
+        Route::patch('/setuju/{id}', [KendaraanController::class, 'setuju'])->name('setuju');
         // Route::get('/search-kendaraan', App\Http\Controllers\KendaraanController::class)->name('search-kendaraan');
     });
 

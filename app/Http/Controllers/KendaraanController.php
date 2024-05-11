@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Kendaraan;
 use App\Exports\KendaraanExport;
+use App\Models\RiwayatKendaraan;
 use App\Models\User;
+use App\Models\UserKendaraan;
 use Brian2694\Toastr\Facades\Toastr;
 use Carbon\Carbon;
 use Illuminate\Validation\ValidationException;
@@ -17,6 +19,13 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class KendaraanController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:create admin', ['only' => ['create', 'store']]);
+        $this->middleware('can:read admin', ['only' => ['show', 'index']]);
+        $this->middleware('can:update admin', ['only' => ['edit', 'update']]);
+        $this->middleware('can:delete admin', ['only' => ['destroy']]);
+    }
     /**
      * Display a listing of the resource.
      */
@@ -25,14 +34,19 @@ class KendaraanController extends Controller
         //
         $identitas = 'kendaraan';
         $pool = User::role('pool')->get();
-        $kendaraans = Kendaraan::where('status', '=', 1)->paginate(10);
-        return view('kendaraan.index', compact('kendaraans', 'identitas','pool'));
+        $client = User::role('client-users')->get();
+        $kendaraans = Kendaraan::where('persetujuan', 1)->with('user')->paginate(10);
+        return view('kendaraan.index', compact('kendaraans', 'identitas', 'pool', 'client'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
     public function create()
+    {
+        //
+    }
+    public function riwayat()
     {
         //
     }
@@ -44,9 +58,11 @@ class KendaraanController extends Controller
     {
         //
         // dd($request->all());
-        $date = Carbon::createFromFormat('d M, Y', $request->jadwal_service)->format('Y-m-d');
+
         try {
             $request->validate([
+                'client' => ['required'],
+                'pool' => ['required'],
                 'name' => ['required', 'string', 'max:255'],
                 'type' => ['required', 'string', 'max:255'],
                 'keterangan' => ['required', 'string', 'max:555'],
@@ -60,13 +76,18 @@ class KendaraanController extends Controller
                 'img_kendaraan.mimes' => 'The image must be a file of type: jpeg, png, jpg, gif.',
                 'img_kendaraan.max' => 'The image may not be greater than :max kilobytes.',
             ]);
-
+            $date = Carbon::createFromFormat('d M, Y', $request->jadwal_service)->format('Y-m-d');
             $dt = now();
             $imagePath = $request->file('img_kendaraan')->store('img_kendaraan', 'public');
 
             $imageUrl = Storage::url($imagePath);
 
+            $client = explode('-', $request->client);
+            $clientid = $client[0];
+            $clientname = $client[1];
+
             $kendaraan = Kendaraan::create([
+                'kendaraan_user_id' => $clientid,
                 'nama' => $request->name,
                 'img' => $imageUrl, // Menggunakan $imageUrl
                 'type' => $request->type,
@@ -74,8 +95,32 @@ class KendaraanController extends Controller
                 'konsumsi_bbm' => $request->konsumsi_bbm,
                 'jadwal_service' => $date,
                 'keterangan' => $request->keterangan,
-                'status' => 1,
+                'status' => 2,
                 'persetujuan' => 0,
+            ]);
+
+            $kendaraanId = $kendaraan->id;
+
+            $valuepool = explode('-', $request->pool);
+            $poolid = $valuepool[0];
+            $poolname = $valuepool[1];
+
+            $userkendaraan = UserKendaraan::create([
+                'user_id' => $clientid,
+                'kendaraan_id' => $kendaraanId,
+                'pool_id' => $poolid,
+            ]);
+
+            $riwayatkendaraan = RiwayatKendaraan::create([
+                'kendaraan_id' => $kendaraan->id,
+                'nama_driver' => $clientname,
+                'nama_kendaraan' => $request->name,
+                'nama_pool' => $poolname,
+                'type' => $request->type,
+                'bahan_bakar' => $request->bahan_bakar,
+                'konsumsi_bbm' => $request->konsumsi_bbm,
+                'jadwal_service' => $date,
+                'keterangan' => $request->keterangan,
             ]);
 
             return redirect()->back()->with('success', 'Kendaraan successfully created');
@@ -99,8 +144,12 @@ class KendaraanController extends Controller
      */
     public function edit(Kendaraan $kendaraan)
     {
-        //
-        return view('kendaraan.edit', compact('kendaraan'));
+        $pool = User::role('pool')->get();
+        $client = User::role('client-users')->get();
+        $user = UserKendaraan::where('kendaraan_id', $kendaraan->id)
+            ->with('user', 'pool')
+            ->first();
+        return view('kendaraan.edit', compact('user', 'pool', 'client'));
     }
 
     /**
@@ -109,10 +158,12 @@ class KendaraanController extends Controller
     public function update(Request $request, Kendaraan $kendaraan)
     {
         //
-        // dd($request->all());
-        $date = Carbon::createFromFormat('d M, Y', $request->jadwal_service)->format('Y-m-d');
+
+
         try {
             $request->validate([
+                'client' => ['required'],
+                'pool' => ['required'],
                 'name' => ['required', 'string', 'max:255'],
                 'type' => ['required', 'string', 'max:255'],
                 'keterangan' => ['required', 'string', 'max:555'],
@@ -125,15 +176,25 @@ class KendaraanController extends Controller
                 'img_kendaraan.mimes' => 'The image must be a file of type: jpeg, png, jpg, gif.',
                 'img_kendaraan.max' => 'The image may not be greater than :max kilobytes.',
             ]);
+            $date = Carbon::createFromFormat('d M, Y', $request->jadwal_service)->format('Y-m-d');
+
+            $client = explode('-', $request->client);
+            $clientid = $client[0];
+            $clientname = $client[1];
+
+            $valuepool = explode('-', $request->pool);
+            $poolid = $valuepool[0];
+            $poolname = $valuepool[1];
 
             $kendaraanData = [
+                'kendaraan_user_id' => $clientid,
                 'nama' => $request->name,
                 'type' => $request->type,
                 'bahan_bakar' => $request->bahan_bakar,
                 'konsumsi_bbm' => $request->konsumsi_bbm,
                 'jadwal_service' => $date,
                 'keterangan' => $request->keterangan,
-                'status' => 1,
+                'status' => 2,
             ];
 
             if ($request->hasFile('img_kendaraan')) {
@@ -144,7 +205,31 @@ class KendaraanController extends Controller
 
             $kendaraan->update($kendaraanData);
 
-            return redirect()->route('kendaraans.index')->with('success', 'Kendaraan successfully created');
+            $userKendaraan = UserKendaraan::find($kendaraan->id);
+
+            $userKendaraan->update([
+                'user_id' => $clientid,
+                'pool_id' => $poolid,
+            ]);
+
+
+            // 
+
+            if ($request->check == 1) {
+                RiwayatKendaraan::create([
+                    'kendaraan_id' => $kendaraan->id,
+                    'nama_driver' => $clientname,
+                    'nama_kendaraan' => $request->name,
+                    'nama_pool' => $poolname,
+                    'type' => $request->type,
+                    'bahan_bakar' => $request->bahan_bakar,
+                    'konsumsi_bbm' => $request->konsumsi_bbm,
+                    'jadwal_service' => $date,
+                    'keterangan' => $request->keterangan,
+                ]);
+            }
+            // dd($clientid);
+            return redirect()->route('kendaraans.index')->with('success', 'Kendaraan successfully Updated');
         } catch (ValidationException $e) {
             $errors = $e->validator->getMessageBag()->all();
             Toastr::error(implode('<br>', $errors), 'Error');
@@ -162,16 +247,24 @@ class KendaraanController extends Controller
         return redirect()->route('kendaraans.index');
     }
 
-    public function setuju(Request $request, Kendaraan $kendaraan)
+    public function setuju(Request $request, $id)
     {
-        //
-        $kendaraanData = [
-            'persetujuan' => 1,
-        ];
-        $kendaraan->update($kendaraanData);
-        Toastr::success('Berhasil Menyetujui Member Berkendara', 'Success'); // Menggunakan metode success untuk Toastr
+        $kendaraan = Kendaraan::findOrFail($id);
+
+        if ($kendaraan->persetujuan == 1) {
+            Toastr::error('Kendaraan telah disetujui sebelumnya.', 'Error');
+            return redirect()->route('kendaraans.index');
+        }
+
+        $request->validate([
+            'persetujuan' => 'required',
+        ]);
+        $kendaraan->update(['persetujuan' => $request->persetujuan]);
+        Toastr::success('Berhasil Menyetujui Member Berkendara', 'Success');
+
         return redirect()->route('kendaraans.index');
     }
+
     public function check(Request $request, Kendaraan $kendaraan)
     {
         //

@@ -55,5 +55,25 @@ class UsersSeeder extends Seeder
             'password' => bcrypt('password')
         ]);
         $pool3->syncRoles('pool');
+
+        $driver1 = User::create([
+            'name' => 'driver1',
+            'username' => 'driver1_user',
+            'gender' => 'male',
+            'email' => 'driver1@driver1.com',
+            'email_verified_at' => now(),
+            'password' => bcrypt('password')
+        ]);
+        $driver1->syncRoles('client-users');
+
+        $driver2 = User::create([
+            'name' => 'driver2',
+            'username' => 'driver2_user',
+            'gender' => 'male',
+            'email' => 'driver2@driver2.com',
+            'email_verified_at' => now(),
+            'password' => bcrypt('password')
+        ]);
+        $driver2->syncRoles('client-users');
     }
 }

@@ -21,12 +21,12 @@
             </div>
             <div class="card">
                 <div class="card-body">
-                    <form action="{{ url('kendaraans/' . $kendaraan->id . '') }}" class="mt-10" method="POST"
+                    <form action="{{ url('kendaraans/' . $user->kendaraan->id . '') }}" class="mt-10" method="POST"
                         enctype="multipart/form-data">
                         @csrf
                         @method('put')
                         <div class="mb-3">
-                            <input type="hidden" value="{{ $kendaraan->img }}" id="kendaraan_id">
+                            <input type="hidden" value="{{ $user->kendaraan->img }}" id="kendaraan_id">
                             <label for="img_kendaraan" class="inline-block mb-2 text-base font-medium">Image
                                 Kendaraan</label>
                             <input id="upload" type="file" class="hidden" name="img_kendaraan" accept="image/*" />
@@ -62,31 +62,50 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="mb-3">
+                            <label for="name" class="inline-block mb-2 text-base font-medium">Pilih Driver</label>
+                            <select class="form-input border-slate-200 dark:border-zink-500 focus:outline-none focus:border-custom-500 disabled:bg-slate-100 dark:disabled:bg-zink-600 disabled:border-slate-300 dark:disabled:border-zink-500 dark:disabled:text-zink-200 disabled:text-slate-500 dark:text-zink-100 dark:bg-zink-700 dark:focus:border-custom-800 placeholder:text-slate-400 dark:placeholder:text-zink-200" data-choices="" name="client" id="client">
+                                <option value="">Please choose your Driver</option>
+                                @foreach($client as $item)
+                                    <option value="{{ $item->id }}-{{ $item->name }}" {{ $user->user_id == $item->id ? 'selected' : '' }}>{{ $item->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="name" class="inline-block mb-2 text-base font-medium">Pilih POOL</label>
+                            <select class="form-input border-slate-200 dark:border-zink-500 focus:outline-none focus:border-custom-500 disabled:bg-slate-100 dark:disabled:bg-zink-600 disabled:border-slate-300 dark:disabled:border-zink-500 dark:disabled:text-zink-200 disabled:text-slate-500 dark:text-zink-100 dark:bg-zink-700 dark:focus:border-custom-800 placeholder:text-slate-400 dark:placeholder:text-zink-200" data-choices="" name="pool" id="pool">
+                                <option value="">Please choose your Pool</option>
+                                @foreach($pool as $item)
+                                <option value="{{ $item->id }}-{{ $item->name }}" {{ $user->pool_id == $item->id ? 'selected' : '' }}>{{ $item->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                         <div class="mb-3">
                             <label for="name" class="inline-block mb-2 text-base font-medium">Name Kendaraan</label>
                             <input type="text" name="name" id="name"
                                 class="form-input border-slate-200 dark:border-zink-500 focus:outline-none focus:border-custom-500 disabled:bg-slate-100 dark:disabled:bg-zink-600 disabled:border-slate-300 dark:disabled:border-zink-500 dark:disabled:text-zink-200 disabled:text-slate-500 dark:text-zink-100 dark:bg-zink-700 dark:focus:border-custom-800 placeholder:text-slate-400 dark:placeholder:text-zink-200"
-                                placeholder="Enter name" value="{{ $kendaraan->nama }}">
+                                placeholder="Enter name" value="{{ $user->kendaraan->nama }}">
                             <p id="name" class="mt-1 text-sm text-red-500"></p>
                         </div>
                         <div class="mb-3">
                             <label for="type" class="inline-block mb-2 text-base font-medium">type</label>
                             <input type="text" name="type" id="type"
                                 class="form-input border-slate-200 dark:border-zink-500 focus:outline-none focus:border-custom-500 disabled:bg-slate-100 dark:disabled:bg-zink-600 disabled:border-slate-300 dark:disabled:border-zink-500 dark:disabled:text-zink-200 disabled:text-slate-500 dark:text-zink-100 dark:bg-zink-700 dark:focus:border-custom-800 placeholder:text-slate-400 dark:placeholder:text-zink-200"
-                                placeholder="Enter type" value="{{ $kendaraan->type }}">
+                                placeholder="Enter type" value="{{ $user->kendaraan->type }}">
                         </div>
                         <div class="mb-3">
                             <label for="bahan_bakar" class="inline-block mb-2 text-base font-medium">bahan bakar</label>
                             <input type="text" name="bahan bakar" id="bahan_bakar"
                                 class="form-input border-slate-200 dark:border-zink-500 focus:outline-none focus:border-custom-500 disabled:bg-slate-100 dark:disabled:bg-zink-600 disabled:border-slate-300 dark:disabled:border-zink-500 dark:disabled:text-zink-200 disabled:text-slate-500 dark:text-zink-100 dark:bg-zink-700 dark:focus:border-custom-800 placeholder:text-slate-400 dark:placeholder:text-zink-200"
-                                placeholder="Enter bahan bakar" value="{{ $kendaraan->bahan_bakar }}">
+                                placeholder="Enter bahan bakar" value="{{ $user->kendaraan->bahan_bakar }}">
                         </div>
                         <div class="mb-3">
                             <label for="konsumsi_bbm" class="inline-block mb-2 text-base font-medium">konsumsi bbm PER
                                 L</label>
                             <input type="number" name="konsumsi_bbm" id="konsumsi_bbm"
                                 class="form-input border-slate-200 dark:border-zink-500 focus:outline-none focus:border-custom-500 disabled:bg-slate-100 dark:disabled:bg-zink-600 disabled:border-slate-300 dark:disabled:border-zink-500 dark:disabled:text-zink-200 disabled:text-slate-500 dark:text-zink-100 dark:bg-zink-700 dark:focus:border-custom-800 placeholder:text-slate-400 dark:placeholder:text-zink-200"
-                                placeholder="Enter konsumsi bbm" value="{{ $kendaraan->konsumsi_bbm }}">
+                                placeholder="Enter konsumsi bbm" value="{{ $user->kendaraan->konsumsi_bbm }}">
                         </div>
                         <div class="mb-3">
                             <label for="date" class="inline-block mb-2 text-base font-medium">Jadwal Service</label>
@@ -94,13 +113,19 @@
                                 class="form-input border-slate-200 dark:border-zink-500 focus:outline-none focus:border-custom-500 disabled:bg-slate-100 dark:disabled:bg-zink-600 disabled:border-slate-300 dark:disabled:border-zink-500 dark:disabled:text-zink-200 disabled:text-slate-500 dark:text-zink-100 dark:bg-zink-700 dark:focus:border-custom-800 placeholder:text-slate-400 dark:placeholder:text-zink-200"
                                 data-provider="flatpickr" data-date-format="d M, Y" readonly="readonly"
                                 name="jadwal_service" placeholder="Select Date" id="date"
-                                value="{{ $kendaraan->jadwal_service }}">
+                                value="{{ $user->kendaraan->jadwal_service }}">
                         </div>
                         <div class="mb-3">
                             <label for="keterangan" class="inline-block mb-2 text-base font-medium">keterangan</label>
                             <textarea
                                 class="form-input border-slate-200 dark:border-zink-500 focus:outline-none focus:border-custom-500 disabled:bg-slate-100 dark:disabled:bg-zink-600 disabled:border-slate-300 dark:disabled:border-zink-500 dark:disabled:text-zink-200 disabled:text-slate-500 dark:text-zink-100 dark:bg-zink-700 dark:focus:border-custom-800 placeholder:text-slate-400 dark:placeholder:text-zink-200"
-                                id="textArea" rows="3" name="keterangan">{{ $kendaraan->keterangan }}</textarea>
+                                id="textArea" rows="3" name="keterangan">{{ $user->kendaraan->keterangan }}</textarea>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <input id="checkboxCircle2" class="border rounded-full appearance-none cursor-pointer size-4 bg-slate-100 border-slate-200 dark:bg-zink-600 dark:border-zink-500 checked:bg-green-500 checked:border-green-500 dark:checked:bg-green-500 dark:checked:border-green-500 checked:disabled:bg-green-400 checked:disabled:border-green-400" type="checkbox" value="1" name="check">
+                            <label for="checkboxCircle2" class="align-middle">
+                                Simpan di Riwayat? 
+                            </label>
                         </div>
                         <div class="mt-10">
                             <button type="submit"
@@ -120,7 +145,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             flatpickr('#date', {
                 dateFormat: 'd M, Y',
-                defaultDate: '{{ $kendaraan->jadwal_service }}' // Atur nilai awal menggunakan data dari PHP
+                defaultDate: '{{ $user->kendaraan->jadwal_service }}' // Atur nilai awal menggunakan data dari PHP
             });
         });
 
@@ -136,7 +161,7 @@
 
         if (kendaraanimage.value) {
             imagePreview.innerHTML =
-                `<img src="{{ asset($kendaraan->img) }}" class="max-h-48 rounded-lg mx-auto" alt="Image preview" "/>`;
+                `<img src="{{ asset($user->kendaraan->img) }}" class="max-h-48 rounded-lg mx-auto" alt="Image preview" "/>`;
             imagePreview.classList.remove('border-dashed', 'border-2', 'border-gray-400');
             if (!isEventListenerAdded) {
                 imagePreview.addEventListener('click', () => {

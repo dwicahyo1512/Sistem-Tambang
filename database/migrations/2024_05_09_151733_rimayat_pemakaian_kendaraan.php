@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -14,12 +13,16 @@ return new class extends Migration
         //
         Schema::create('riwayat_kendaraans', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->unsignedBigInteger('kendaraan_id');
+            $table->unsignedBigInteger('kendaraan_id')->nullable();
             $table->foreign('kendaraan_id')->references('id')->on('kendaraans');
-            $table->unsignedBigInteger('pool_id');
-            $table->foreign('pool_id')->references('role_id')->on('model_has_roles');
+            $table->string('nama_driver');
+            $table->string('nama_kendaraan');
+            $table->string('nama_pool');
+            $table->string('type');
+            $table->string('bahan_bakar');
+            $table->string('konsumsi_bbm');
+            $table->string('jadwal_service');
+            $table->string('keterangan');
             $table->timestamps();
         });
     }

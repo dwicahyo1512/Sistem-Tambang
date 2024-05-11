@@ -48,7 +48,7 @@
                                         Driver</th>
                                     <th
                                         class="px-3.5 py-2.5 font-semibold border-b border-custom-200 dark:border-custom-900">
-                                        Gambar Kendaraan</th>
+                                        Nama Penyetuju</th>
                                     <th
                                         class="px-3.5 py-2.5 font-semibold border-b border-custom-200 dark:border-custom-900">
                                         Type</th>
@@ -62,14 +62,9 @@
                                         class="px-3.5 py-2.5 font-semibold border-b border-custom-200 dark:border-custom-900">
                                         Jadwal Service</th>
                                     <th
-                                        class="px-3.5 py-2.5 font-semibold border-b border-custom-200 dark:border-custom-900">
-                                        Riwayat</th>
+                                        class="px-3.5 py-2.5 font-semibold border-b border-custom-200 dark:border-custom-900">keterangan</th>
                                     <th
-                                        class="px-3.5 py-2.5 font-semibold border-b border-custom-200 dark:border-custom-900">
-                                        Status</th>
-                                    <th
-                                        class="px-3.5 py-2.5 font-semibold border-b border-custom-200 dark:border-custom-900">
-                                        Persetujuan Pool</th>
+                                        class="px-3.5 py-2.5 font-semibold border-b border-custom-200 dark:border-custom-900">Tanggal Created</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -78,13 +73,11 @@
                                         <td class="px-3.5 py-2.5 border-y border-custom-200 dark:border-custom-900">
                                             {{ $index + 1 }}</td>
                                         <td class="px-3.5 py-2.5 border-y border-custom-200 dark:border-custom-900">
-                                            {{ $kendaraan->nama }}</td>
+                                            {{ $kendaraan->nama_driver }}</td>
                                         <td class="px-3.5 py-2.5 border-y border-custom-200 dark:border-custom-900">
-                                            {{ $kendaraan->kendaraan_id }}</td>
+                                            {{ $kendaraan->nama_kendaraan }}</td>
                                         <td class="px-3.5 py-2.5 border-y border-custom-200 dark:border-custom-900">
-                                            <img src="{{ asset($kendaraan->img) }}" alt="Image"
-                                                class="w-24 h-24 rounded">
-                                        </td>
+                                            {{ $kendaraan->nama_pool }}</td>
                                         <td class="px-3.5 py-2.5 border-y border-custom-200 dark:border-custom-900">
                                             {{ $kendaraan->type }}</td>
                                         <td class="px-3.5 py-2.5 border-y border-custom-200 dark:border-custom-900">
@@ -94,31 +87,9 @@
                                         <td class="px-3.5 py-2.5 border-y border-custom-200 dark:border-custom-900">
                                             {{ $kendaraan->jadwal_service }}</td>
                                         <td class="px-3.5 py-2.5 border-y border-custom-200 dark:border-custom-900">
-                                            {{ $kendaraan->riwayat }}</td>
+                                            {{ $kendaraan->keterangan }}</td>
                                         <td class="px-3.5 py-2.5 border-y border-custom-200 dark:border-custom-900">
-                                            @if ($kendaraan->status === 0)
-                                                <span
-                                                    class="px-2.5 py-0.5 inline-block text-xs font-medium rounded border bg-ren-100 border-transparent text-ren-500 dark:bg-ren-500/20 dark:border-transparent">Nonaktif</span>
-                                            @elseif($kendaraan->status === 1)
-                                                <span
-                                                    class="px-2.5 py-0.5 inline-block text-xs font-medium rounded border bg-orange-100 border-transparent text-orange-500 dark:bg-orange-500/20 dark:border-transparent">Tersedia</span>
-                                            @elseif($kendaraan->status === 2)
-                                                <span
-                                                    class="px-2.5 py-0.5 inline-block text-xs font-medium rounded border bg-green-100 border-transparent text-green-500 dark:bg-green-500/20 dark:border-transparent">Terpakai</span>
-                                            @endif
-                                        </td>
-                                        <td class="px-3.5 py-2.5 border-y border-custom-200 dark:border-custom-900">
-                                            @can('read pool')
-                                                @if ($kendaraan->persetujuan === 0)
-                                                    <span
-                                                        class="px-2.5 py-0.5 inline-block text-xs font-medium rounded border bg-red-100 border-transparent text-red-500 dark:bg-red-500/20 dark:border-transparent">Tidak
-                                                        Setujui</span>
-                                                @elseif($kendaraan->persetujuan === 1)
-                                                    <span
-                                                        class="px-2.5 py-0.5 inline-block text-xs font-medium rounded border bg-green-100 border-transparent text-green-500 dark:bg-green-500/20 dark:border-transparent">Setuju</span>
-                                                @endif
-                                            @endcan
-                                        </td>
+                                            {{ $kendaraan->created_at }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>

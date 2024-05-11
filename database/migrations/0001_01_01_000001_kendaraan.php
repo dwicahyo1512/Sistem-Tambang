@@ -22,7 +22,6 @@ return new class extends Migration
             $table->string('bahan_bakar');
             $table->string('konsumsi_bbm');
             $table->string('jadwal_service');
-            $table->string('riwayat_pemakaian_kendaraan')->nullable(); // Mengizinkan nilai null
             $table->tinyInteger('persetujuan')->nullable();
             $table->tinyInteger('status');
             $table->string('keterangan');

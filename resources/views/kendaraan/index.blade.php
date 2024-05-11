@@ -112,9 +112,6 @@
                                         Jadwal Service</th>
                                     <th
                                         class="px-3.5 py-2.5 font-semibold border-b border-custom-200 dark:border-custom-900">
-                                        Riwayat</th>
-                                    <th
-                                        class="px-3.5 py-2.5 font-semibold border-b border-custom-200 dark:border-custom-900">
                                         Status</th>
                                     @can('read pool')
                                         <th
@@ -134,7 +131,13 @@
                                         <td class="px-3.5 py-2.5 border-y border-custom-200 dark:border-custom-900">
                                             {{ $kendaraan->nama }}</td>
                                         <td class="px-3.5 py-2.5 border-y border-custom-200 dark:border-custom-900">
-                                            {{ $kendaraan->kendaraan_id }}</td>
+                                            @if (!$kendaraan->user)
+                                                <span
+                                                    class="px-2.5 py-0.5 inline-block text-xs font-medium rounded border bg-orange-100 border-transparent text-orange-500 dark:bg-orange-500/20 dark:border-transparent">Kosong</span>
+                                            @else
+                                                {{ $kendaraan->user->name }}
+                                            @endif
+                                        </td>
                                         <td class="px-3.5 py-2.5 border-y border-custom-200 dark:border-custom-900">
                                             <img src="{{ asset($kendaraan->img) }}" alt="Image"
                                                 class="w-24 h-24 rounded">
@@ -147,8 +150,6 @@
                                             {{ $kendaraan->konsumsi_bbm }}</td>
                                         <td class="px-3.5 py-2.5 border-y border-custom-200 dark:border-custom-900">
                                             {{ $kendaraan->jadwal_service }}</td>
-                                        <td class="px-3.5 py-2.5 border-y border-custom-200 dark:border-custom-900">
-                                            {{ $kendaraan->riwayat }}</td>
                                         <td class="px-3.5 py-2.5 border-y border-custom-200 dark:border-custom-900">
                                             @if ($kendaraan->status === 0)
                                                 <span
@@ -165,8 +166,8 @@
                                             @can('read pool')
                                                 @if ($kendaraan->persetujuan === 0)
                                                     <span
-                                                        class="px-2.5 py-0.5 inline-block text-xs font-medium rounded border bg-red-100 border-transparent text-red-500 dark:bg-red-500/20 dark:border-transparent">Tidak
-                                                        Setujui</span>
+                                                        class="px-2.5 py-0.5 inline-block text-xs font-medium rounded border bg-red-100 border-transparent text-red-500 dark:bg-red-500/20 dark:border-transparent">Waiting
+                                                        Confirm Pool</span>
                                                 @elseif($kendaraan->persetujuan === 1)
                                                     <span
                                                         class="px-2.5 py-0.5 inline-block text-xs font-medium rounded border bg-green-100 border-transparent text-green-500 dark:bg-green-500/20 dark:border-transparent">Setuju</span>
@@ -174,26 +175,15 @@
                                             @endcan
                                         </td>
                                         <td class="px-3.5 py-2.5 border-y border-custom-200 dark:border-custom-900">
-                                            @can('read client_users')
-                                                @if ($identitas === 'kendaraan')
-                                                    <form action="{{ route('check', $kendaraan->id) }}" method="POST"
-                                                        class="inline">
-                                                        @csrf
-                                                        @method('put')
-                                                        <button type="submit"
-                                                            class="transition-all duration-150 ease-linear text-green-500 hover:text-custom-600">
-                                                            <i class="ri-checkbox-circle-line"></i> Pilih Kendaraan Ini
-                                                        </button>
-                                                    </form>
-                                                @endif
-                                            @endcan
                                             @can('read pool')
                                                 @if ($identitas === 'pool')
                                                     <form action="{{ route('setuju', $kendaraan->id) }}" method="POST"
                                                         class="inline">
                                                         @csrf
-                                                        @method('put')
-                                                        <button type="submit"
+                                                        @method('PATCH')
+                                                        <input type="hidden" name="persetujuan" value="1">
+                                                        <button type="button"
+                                                            onclick="confirmPersetujuan(event, '{{ $kendaraan->nama }}')"
                                                             class="transition-all duration-150 ease-linear text-green-500 hover:text-custom-600">
                                                             <i class="ri-check-line"></i> Check
                                                         </button>
@@ -201,19 +191,25 @@
                                                 @endif
                                             @endcan
                                             @can('read admin')
-                                                <a href="{{ route('kendaraans.edit', $kendaraan->id) }}"
-                                                    class="transition-all duration-150 ease-linear text-yellow-500 hover:text-custom-600">
-                                                    <i class="ri-pencil-line"></i> Edit
-                                                </a>
-                                                <form action="{{ route('kendaraans.destroy', $kendaraan->id) }}" method="POST"
-                                                    class="inline">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="button" data-modal-target="deleteModal"
-                                                        class="transition-all duration-150 ease-linear text-red-500 hover:text-custom-600">
-                                                        <i class="ri-delete-bin-line"></i> Delete
-                                                    </button>
-                                                </form>
+                                                @if ($identitas === 'kendaraan')
+                                                    <a href="{{ route('view-riwayat', $kendaraan->id) }}"
+                                                        class="transition-all duration-150 ease-linear text-sky-500 hover:text-custom-600">
+                                                        <i class="ri-eye-line"></i> Riwayat
+                                                    </a>
+                                                    <a href="{{ route('kendaraans.edit', $kendaraan->id) }}"
+                                                        class="transition-all duration-150 ease-linear text-yellow-500 hover:text-orange-500">
+                                                        <i class="ri-pencil-line"></i> Edit
+                                                    </a>
+                                                    <form action="{{ route('kendaraans.destroy', $kendaraan->id) }}"
+                                                        method="POST" class="inline">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="button" data-modal-target="deleteModal"
+                                                            class="transition-all duration-150 ease-linear text-red-400 hover:text-red-600">
+                                                            <i class="ri-delete-bin-line"></i> Delete
+                                                        </button>
+                                                    </form>
+                                                @endif
                                             @endcan
                                         </td>
                                     </tr>
@@ -281,13 +277,36 @@
                                 </div>
                             </div>
                         </div>
-                        {{ $pool }}
+                        <div class="mb-3">
+                            <label for="name" class="inline-block mb-2 text-base font-medium">Pilih Driver</label>
+                            <select
+                                class="form-input border-slate-200 dark:border-zink-500 focus:outline-none focus:border-custom-500 disabled:bg-slate-100 dark:disabled:bg-zink-600 disabled:border-slate-300 dark:disabled:border-zink-500 dark:disabled:text-zink-200 disabled:text-slate-500 dark:text-zink-100 dark:bg-zink-700 dark:focus:border-custom-800 placeholder:text-slate-400 dark:placeholder:text-zink-200"
+                                data-choices="" name="client" id="client">
+                                <option value="">Please choose your Driver</option>
+                                @foreach ($client as $item)
+                                    <option value="{{ $item->id }}-{{ $item->name }}"
+                                        {{ old('client') == $item->id ? 'selected' : '' }}>{{ $item->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="name" class="inline-block mb-2 text-base font-medium">Pilih POOL</label>
+                            <select
+                                class="form-input border-slate-200 dark:border-zink-500 focus:outline-none focus:border-custom-500 disabled:bg-slate-100 dark:disabled:bg-zink-600 disabled:border-slate-300 dark:disabled:border-zink-500 dark:disabled:text-zink-200 disabled:text-slate-500 dark:text-zink-100 dark:bg-zink-700 dark:focus:border-custom-800 placeholder:text-slate-400 dark:placeholder:text-zink-200"
+                                data-choices="" name="pool" id="pool">
+                                <option value="">Please choose your Pool</option>
+                                @foreach ($pool as $item)
+                                    <option value="{{ $item->id }}-{{ $item->name }}"
+                                        {{ old('pool') == $item->id ? 'selected' : '' }}>{{ $item->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                         <div class="mb-3">
                             <label for="name" class="inline-block mb-2 text-base font-medium">Name Kendaraan</label>
-                            <input type="text" name="name" id="name"
+                            <input type="text" name="name" id="nameInput" value="{{ old('name') }}"
                                 class="form-input border-slate-200 dark:border-zink-500 focus:outline-none focus:border-custom-500 disabled:bg-slate-100 dark:disabled:bg-zink-600 disabled:border-slate-300 dark:disabled:border-zink-500 dark:disabled:text-zink-200 disabled:text-slate-500 dark:text-zink-100 dark:bg-zink-700 dark:focus:border-custom-800 placeholder:text-slate-400 dark:placeholder:text-zink-200"
                                 placeholder="Enter name">
-                            <p id="name" class="mt-1 text-sm text-red-500"></p>
+                            <p id="nameInput" class="mt-1 text-sm text-red-500"></p>
                         </div>
                         <div class="mb-3">
                             <label for="type" class="inline-block mb-2 text-base font-medium">type</label>
@@ -321,7 +340,7 @@
                                 class="form-input border-slate-200 dark:border-zink-500 focus:outline-none focus:border-custom-500 disabled:bg-slate-100 dark:disabled:bg-zink-600 disabled:border-slate-300 dark:disabled:border-zink-500 dark:disabled:text-zink-200 disabled:text-slate-500 dark:text-zink-100 dark:bg-zink-700 dark:focus:border-custom-800 placeholder:text-slate-400 dark:placeholder:text-zink-200"
                                 id="textArea" rows="3" name="keterangan"></textarea>
                         </div>
-                     
+
                         <div class="mt-10">
                             <button type="submit"
                                 class="w-full text-white transition-all duration-200 ease-linear btn bg-custom-500 border-custom-500 hover:text-white hover:bg-custom-600 hover:border-custom-600 focus:text-white focus:bg-custom-600 focus:border-custom-600 focus:ring focus:ring-custom-100 active:text-white active:bg-custom-600 active:border-custom-600 active:ring active:ring-custom-100 dark:ring-custom-400/20">Add
@@ -360,6 +379,24 @@
     @endif
 @endsection
 @section('script')
+    <script>
+        function confirmPersetujuan(event, name) {
+            // console.log(name);
+            event.preventDefault();
+            Swal.fire({
+                title: 'Apa Kamu Yakin?',
+                text: `apakah kamu yakin menyetujui kendaraan ${name} dijalankan?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, update it!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    event.target.form.submit();
+                }
+            });
+        }
+    </script>
     @if (session('success'))
         <script>
             Swal.fire({
