@@ -279,7 +279,7 @@
                                     id="dropdownMenuButton" data-bs-toggle="dropdown">
                                     <div class="bg-pink-100 rounded-full">
                                         @if (Auth::user()->avatar)
-                                            <img src="{{ asset( Auth::user()->avatar) }}" alt="Avatar"
+                                            <img src="{{ asset( 'storage/' . Auth::user()->avatar) }}" alt="Avatar"
                                                 class="w-[37.5px] h-[37.5px] rounded-full">
                                         @elseif (Auth::user()->gender === 'male')
                                             <img src="{{ asset('assets/images/avatar-2.png') }}" alt="Male Avatar"
@@ -299,7 +299,7 @@
                                         <div class="relative inline-block shrink-0">
                                             <div class="rounded bg-slate-100 dark:bg-zink-500">
                                                 @if (Auth::user()->avatar)
-                                                    <img src="{{ asset( Auth::user()->avatar) }}"
+                                                    <img src="{{ asset( 'storage/' . Auth::user()->avatar) }}"
                                                         alt="Avatar" class="w-12 h-12 rounded">
                                                 @elseif (Auth::user()->gender === 'male')
                                                     <img src="{{ asset('assets/images/avatar-2.png') }}"
