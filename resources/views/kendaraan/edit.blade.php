@@ -65,19 +65,25 @@
 
                         <div class="mb-3">
                             <label for="name" class="inline-block mb-2 text-base font-medium">Pilih Driver</label>
-                            <select class="form-input border-slate-200 dark:border-zink-500 focus:outline-none focus:border-custom-500 disabled:bg-slate-100 dark:disabled:bg-zink-600 disabled:border-slate-300 dark:disabled:border-zink-500 dark:disabled:text-zink-200 disabled:text-slate-500 dark:text-zink-100 dark:bg-zink-700 dark:focus:border-custom-800 placeholder:text-slate-400 dark:placeholder:text-zink-200" data-choices="" name="client" id="client">
+                            <select
+                                class="form-input border-slate-200 dark:border-zink-500 focus:outline-none focus:border-custom-500 disabled:bg-slate-100 dark:disabled:bg-zink-600 disabled:border-slate-300 dark:disabled:border-zink-500 dark:disabled:text-zink-200 disabled:text-slate-500 dark:text-zink-100 dark:bg-zink-700 dark:focus:border-custom-800 placeholder:text-slate-400 dark:placeholder:text-zink-200"
+                                data-choices="" name="client" id="client">
                                 <option value="">Please choose your Driver</option>
-                                @foreach($client as $item)
-                                    <option value="{{ $item->id }}-{{ $item->name }}" {{ $user->user_id == $item->id ? 'selected' : '' }}>{{ $item->name }}</option>
+                                @foreach ($client as $item)
+                                    <option value="{{ $item->id }}-{{ $item->name }}"
+                                        {{ $user->user_id == $item->id ? 'selected' : '' }}>{{ $item->name }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="mb-3">
                             <label for="name" class="inline-block mb-2 text-base font-medium">Pilih POOL</label>
-                            <select class="form-input border-slate-200 dark:border-zink-500 focus:outline-none focus:border-custom-500 disabled:bg-slate-100 dark:disabled:bg-zink-600 disabled:border-slate-300 dark:disabled:border-zink-500 dark:disabled:text-zink-200 disabled:text-slate-500 dark:text-zink-100 dark:bg-zink-700 dark:focus:border-custom-800 placeholder:text-slate-400 dark:placeholder:text-zink-200" data-choices="" name="pool" id="pool">
+                            <select
+                                class="form-input border-slate-200 dark:border-zink-500 focus:outline-none focus:border-custom-500 disabled:bg-slate-100 dark:disabled:bg-zink-600 disabled:border-slate-300 dark:disabled:border-zink-500 dark:disabled:text-zink-200 disabled:text-slate-500 dark:text-zink-100 dark:bg-zink-700 dark:focus:border-custom-800 placeholder:text-slate-400 dark:placeholder:text-zink-200"
+                                data-choices="" name="pool" id="pool">
                                 <option value="">Please choose your Pool</option>
-                                @foreach($pool as $item)
-                                <option value="{{ $item->id }}-{{ $item->name }}" {{ $user->pool_id == $item->id ? 'selected' : '' }}>{{ $item->name }}</option>
+                                @foreach ($pool as $item)
+                                    <option value="{{ $item->id }}-{{ $item->name }}"
+                                        {{ $user->pool_id == $item->id ? 'selected' : '' }}>{{ $item->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -122,13 +128,15 @@
                                 id="textArea" rows="3" name="keterangan">{{ $user->kendaraan->keterangan }}</textarea>
                         </div>
                         <div class="flex items-center gap-2">
-                            <input id="checkboxCircle2" class="border rounded-full appearance-none cursor-pointer size-4 bg-slate-100 border-slate-200 dark:bg-zink-600 dark:border-zink-500 checked:bg-green-500 checked:border-green-500 dark:checked:bg-green-500 dark:checked:border-green-500 checked:disabled:bg-green-400 checked:disabled:border-green-400" type="checkbox" value="1" name="check">
+                            <input id="checkboxCircle2"
+                                class="border rounded-full appearance-none cursor-pointer size-4 bg-slate-100 border-slate-200 dark:bg-zink-600 dark:border-zink-500 checked:bg-green-500 checked:border-green-500 dark:checked:bg-green-500 dark:checked:border-green-500 checked:disabled:bg-green-400 checked:disabled:border-green-400"
+                                type="checkbox" value="1" name="check">
                             <label for="checkboxCircle2" class="align-middle">
-                                Simpan di Riwayat? 
+                                Simpan Perubahan di Riwayat?
                             </label>
                         </div>
                         <div class="mt-10">
-                            <button type="submit"
+                            <button type="button" onclick="confirmUpdate(event)"
                                 class="w-full text-white transition-all duration-200 ease-linear btn bg-custom-500 border-custom-500 hover:text-white hover:bg-custom-600 hover:border-custom-600 focus:text-white focus:bg-custom-600 focus:border-custom-600 focus:ring focus:ring-custom-100 active:text-white active:bg-custom-600 active:border-custom-600 active:ring active:ring-custom-100 dark:ring-custom-400/20">Add
                                 Kendaraan</button>
                         </div>
@@ -142,6 +150,22 @@
 @endsection
 @section('script')
     <script>
+        function confirmUpdate(event) {
+            // console.log(name);
+            event.preventDefault();
+            Swal.fire({
+                title: 'Apa Kamu Yakin?',
+                text: `apakah kamu Yakin Update Kendaraan ini?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, Update it!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    event.target.form.submit();
+                }
+            });
+        }
         document.addEventListener('DOMContentLoaded', function() {
             flatpickr('#date', {
                 dateFormat: 'd M, Y',

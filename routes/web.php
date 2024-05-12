@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\KendaraanController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\PoolController;
@@ -11,11 +12,14 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard.home');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [HomeController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+    Route::get('/datagender/{year}', [HomeController::class, 'datagender']);
+    Route::get('/datakendaraan/{year}', [HomeController::class, 'datakendaraan']);
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::post('/updateProfileImage', [ProfileController::class, 'updateProfileImage'])->name('updateProfileImage');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -30,7 +34,7 @@ Route::middleware('auth')->group(function () {
     Route::controller(KendaraanController::class)->group(function () {
         Route::resource('kendaraans', App\Http\Controllers\KendaraanController::class)->names('kendaraans');
         Route::get('/export-kendaraan', [KendaraanController::class, 'export'])->name('export-kendaraan');
-        Route::get('/view-riwayat', [KendaraanController::class, 'riwayat'])->name('view-riwayat');
+        Route::get('/view-riwayat/{id}', [KendaraanController::class, 'riwayat'])->name('view-riwayat');
         Route::patch('/setuju/{id}', [KendaraanController::class, 'setuju'])->name('setuju');
         // Route::get('/search-kendaraan', App\Http\Controllers\KendaraanController::class)->name('search-kendaraan');
     });

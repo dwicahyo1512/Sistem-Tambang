@@ -32,10 +32,15 @@ class KendaraanController extends Controller
     public function index()
     {
         //
+
         $identitas = 'kendaraan';
         $pool = User::role('pool')->get();
-        $client = User::role('client-users')->get();
-        $kendaraans = Kendaraan::where('persetujuan', 1)->with('user')->paginate(10);
+        $client = User::role('client-users') ->whereNotIn('id', function ($query) {
+            $query->select('user_id')
+                  ->from('user_kendaraans');
+        })
+        ->get();
+        $gendermaledate = User::where('gender', 'male')->get();
         return view('kendaraan.index', compact('kendaraans', 'identitas', 'pool', 'client'));
     }
 
@@ -46,9 +51,12 @@ class KendaraanController extends Controller
     {
         //
     }
-    public function riwayat()
+    public function riwayat($id)
     {
         //
+        $kendaraans = RiwayatKendaraan::where('kendaraan_id', $id)->paginate(10);
+        return view('kendaraan.riwayat', compact('kendaraans'));
+        // dd($id);
     }
 
     /**
@@ -242,10 +250,16 @@ class KendaraanController extends Controller
      */
     public function destroy(Kendaraan $kendaraan)
     {
+        // Hapus relasi dari tabel UserKendaraan yang memiliki kendaraan_id sama dengan id kendaraan yang dihapus
+        UserKendaraan::where('kendaraan_id', $kendaraan->id)->delete();
+
+        // Hapus kendaraan dari tabel Kendaraan
         $kendaraan->delete();
-        Toastr::success('Berhasil menghapus kendaraan', 'Success'); // Menggunakan metode success untuk Toastr
+    
+        Toastr::success('Berhasil menghapus kendaraan', 'Success'); // Menampilkan pesan sukses menggunakan Toastr
         return redirect()->route('kendaraans.index');
     }
+    
 
     public function setuju(Request $request, $id)
     {
@@ -253,7 +267,7 @@ class KendaraanController extends Controller
 
         if ($kendaraan->persetujuan == 1) {
             Toastr::error('Kendaraan telah disetujui sebelumnya.', 'Error');
-            return redirect()->route('kendaraans.index');
+            return redirect()->route('pools.index');
         }
 
         $request->validate([
@@ -262,7 +276,7 @@ class KendaraanController extends Controller
         $kendaraan->update(['persetujuan' => $request->persetujuan]);
         Toastr::success('Berhasil Menyetujui Member Berkendara', 'Success');
 
-        return redirect()->route('kendaraans.index');
+        return redirect()->route('pools.index');
     }
 
     public function check(Request $request, Kendaraan $kendaraan)

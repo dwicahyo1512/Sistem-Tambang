@@ -126,7 +126,10 @@
                                         <td class="px-3.5 py-2.5 border-y border-custom-200 dark:border-custom-900">
                                             {{ $user->username }}</td>
                                         <td class="px-3.5 py-2.5 border-y border-custom-200 dark:border-custom-900">
-                                            {{ $user->username }}</td>
+                                            @foreach ($user->roles as $role)
+                                                {{ $role->name }}
+                                            @endforeach
+                                        </td>
                                         <td class="px-3.5 py-2.5 border-y border-custom-200 dark:border-custom-900">
                                             {{ $user->email }}</td>
                                         <td class="px-3.5 py-2.5 border-y border-custom-200 dark:border-custom-900">

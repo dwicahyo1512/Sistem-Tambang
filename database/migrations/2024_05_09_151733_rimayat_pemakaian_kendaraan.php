@@ -14,7 +14,6 @@ return new class extends Migration {
         Schema::create('riwayat_kendaraans', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('kendaraan_id')->nullable();
-            $table->foreign('kendaraan_id')->references('id')->on('kendaraans');
             $table->string('nama_driver');
             $table->string('nama_kendaraan');
             $table->string('nama_pool');
