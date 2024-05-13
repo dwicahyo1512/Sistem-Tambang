@@ -197,6 +197,7 @@ class UserController extends Controller
         try {
             $request->validate([
                 'name' => ['required', 'string', 'max:255'],
+                'roles' => ['required'],
                 'username' => ['required', 'string', 'max:255', 'unique:' . User::class],
                 'gender' => ['required', 'string'],
                 'email' => ['required', 'string', 'email', 'max:255', 'unique:' . User::class],
@@ -283,6 +284,7 @@ class UserController extends Controller
         try {
             $request->validate([
                 'name' => ['required', 'string', 'max:255'],
+                'roles' => ['required'],
                 'username' => ['required', 'string', 'max:255', 'unique:users,username,' . $user->id],
                 'gender' => ['required', 'string'],
                 'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
@@ -312,7 +314,9 @@ class UserController extends Controller
                 $userData['avatar'] = $imageUrl;
             }
             $user->update($userData);
+            $user->roles()->detach();
             $user->assignRole($request->roles);
+            
             if($request->roles == 'client_users'){
                 $user->givePermissionTo([
                     'read client_users',
