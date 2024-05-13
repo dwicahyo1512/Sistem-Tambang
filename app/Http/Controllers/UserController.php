@@ -229,22 +229,23 @@ class UserController extends Controller
             ]);
 
             $user->assignRole($request->roles);
-            if($request->roles == 'client_users'){
-                $user->givePermissionTo([
-                    'read client_users',
-                ]);
+            
+            // if($request->roles == 'client_users'){
+            //     $user->givePermissionTo([
+            //         'read client_users',
+            //     ]);
                 
-            }elseif($request->roles == 'pool'){
-                $user->givePermissionTo([
-                    'read client_users',
-                    'read pool',
-                    'create pool',
-                    'update pool',
-                    'delete pool',
-                ]);
-            }else{
-                $user->givePermissionTo(Permission::all());
-            }
+            // }elseif($request->roles == 'pool'){
+            //     $user->givePermissionTo([
+            //         'read client_users',
+            //         'read pool',
+            //         'create pool',
+            //         'update pool',
+            //         'delete pool',
+            //     ]);
+            // }else{
+            //     $user->givePermissionTo(Permission::all());
+            // }
 
             return redirect()->back()->with('success', 'User successfully created');
         } catch (ValidationException $e) {
@@ -317,22 +318,22 @@ class UserController extends Controller
             $user->roles()->detach();
             $user->assignRole($request->roles);
             
-            if($request->roles == 'client_users'){
-                $user->givePermissionTo([
-                    'read client_users',
-                ]);
+            // if($request->roles == 'client_users'){
+            //     $user->givePermissionTo([
+            //         'read client_users',
+            //     ]);
                 
-            }elseif($request->roles == 'pool'){
-                $user->givePermissionTo([
-                    'read client_users',
-                    'read pool',
-                    'create pool',
-                    'update pool',
-                    'delete pool',
-                ]);
-            }else{
-                $user->givePermissionTo(Permission::all());
-            }
+            // }elseif($request->roles == 'pool'){
+            //     $user->givePermissionTo([
+            //         'read client_users',
+            //         'read pool',
+            //         'create pool',
+            //         'update pool',
+            //         'delete pool',
+            //     ]);
+            // }else{
+            //     $user->givePermissionTo(Permission::all());
+            // }
 
             return redirect()->route('users.index')->with('success', 'User successfully updated.');
         } catch (ValidationException $e) {

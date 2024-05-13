@@ -75,11 +75,17 @@
                                 placeholder="Enter Username" value="{{ $user->username }}">
                         </div>
                         <div class="mb-3">
+
                             <label for="roles" class="inline-block mb-2 text-base font-medium">Roles</label>
-                            <select class="form-input border-slate-200 dark:border-zink-500 focus:outline-none focus:border-custom-500 disabled:bg-slate-100 dark:disabled:bg-zink-600 disabled:border-slate-300 dark:disabled:border-zink-500 dark:disabled:text-zink-200 disabled:text-slate-500 dark:text-zink-100 dark:bg-zink-700 dark:focus:border-custom-800 placeholder:text-slate-400 dark:placeholder:text-zink-200" data-choices="" name="roles" id="roles">
+                            <select
+                                class="form-input border-slate-200 dark:border-zink-500 focus:outline-none focus:border-custom-500 disabled:bg-slate-100 dark:disabled:bg-zink-600 disabled:border-slate-300 dark:disabled:border-zink-500 dark:disabled:text-zink-200 disabled:text-slate-500 dark:text-zink-100 dark:bg-zink-700 dark:focus:border-custom-800 placeholder:text-slate-400 dark:placeholder:text-zink-200"
+                                data-choices="" name="roles" id="roles">
                                 <option value="">please choose your Role</option>
-                                @foreach($roles as $id => $name)
-                                    <option value="{{ $name }}">{{ $name }}</option>
+                                @foreach ($roles as $id => $name)
+                                    <option value="{{ $name }}"
+                                        {{ $user->roles->contains('name', $name) ? 'selected' : '' }}>
+                                        {{ $name }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
@@ -103,7 +109,8 @@
                                 placeholder="Enter email" value="{{ $user->email }}">
                         </div>
                         <div class="mb-3">
-                            <label for="number" class="inline-block mb-2 text-base font-medium">Your Phone Number</label>
+                            <label for="number" class="inline-block mb-2 text-base font-medium">Your Phone
+                                Number</label>
                             <input type="number" name="phone_number" id="number_edit"
                                 class="form-input border-slate-200 dark:border-zink-500 focus:outline-none focus:border-custom-500 disabled:bg-slate-100 dark:disabled:bg-zink-600 disabled:border-slate-300 dark:disabled:border-zink-500 dark:disabled:text-zink-200 disabled:text-slate-500 dark:text-zink-100 dark:bg-zink-700 dark:focus:border-custom-800 placeholder:text-slate-400 dark:placeholder:text-zink-200"
                                 placeholder="Enter Phone Number"value="{{ $user->phone_number }}">
