@@ -219,11 +219,12 @@
                         }
                     };
                     // Render grafik dengan opsi yang baru
-                    var chart = new ApexCharts(document.querySelector("#dailyVisitInsightsChart"), options1);
-                    chart.render();
+                    var datagender = new ApexCharts(document.querySelector("#dailyVisitInsightsChart"), options1);
+                    datagender.render();
 
                     setTimeout(function() {
-                        chart.updateSeries([response]);
+                        datagender.updateSeries(response);
+                        console.log(response);
                     }, 2000);
                 },
                 error: function(xhr, status, error) {
@@ -339,12 +340,12 @@
                         colors: getChartColorsArray("pagesInteraction")
                     };
 
-                    var chart = new ApexCharts(document.querySelector("#pagesInteraction"), options);
-                    chart.render();
+                    var chartdatakendaraan = new ApexCharts(document.querySelector("#pagesInteraction"), options);
+                    chartdatakendaraan.render();
 
                     setTimeout(function() {
-                        chart.updateSeries([response]);
-                    }, 2000);
+                        chartdatakendaraan.updateSeries(response);
+                    }, 3000);
                 },
                 error: function(xhr, status, error) {
                     console.error(error); // Tampilkan pesan kesalahan jika terjadi
