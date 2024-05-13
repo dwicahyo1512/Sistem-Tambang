@@ -11,6 +11,7 @@ class Kendaraan extends Model
 
     protected $fillable = [
         'kendaraan_user_id',
+        'pool_id',
         'nama',
         'img',
         'type',
@@ -24,5 +25,9 @@ class Kendaraan extends Model
     public function user()
     {
         return $this->belongsTo(User::class,'kendaraan_user_id')->select('id', 'name', 'email');
+    }
+    public function pool()
+    {
+        return $this->belongsTo(User::class,'pool_id')->select('id', 'name', 'email','created_at');
     }
 }

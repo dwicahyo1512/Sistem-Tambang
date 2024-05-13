@@ -16,6 +16,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('kendaraan_user_id')->nullable();
             $table->foreign('kendaraan_user_id')->references('id')->on('users');
+            $table->unsignedBigInteger('pool_id');
+            $table->foreign('pool_id')->references('id')->on('users');
             $table->string('nama');
             $table->string('img');
             $table->string('type');

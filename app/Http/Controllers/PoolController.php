@@ -19,11 +19,13 @@ class PoolController extends Controller
      */
     public function index()
     {
-        //
         $identitas = 'pool';
-        $kendaraans = Kendaraan::where('persetujuan', '=', 0)->paginate(10);
-        return view('kendaraan.index', compact('kendaraans','identitas'));        
+        $kendaraans = Kendaraan::where('persetujuan', 0)
+                               ->where('pool_id', auth()->id())
+                               ->paginate(10);
+        return view('kendaraan.index', compact('kendaraans', 'identitas'));        
     }
+    
 
     /**
      * Show the form for creating a new resource.

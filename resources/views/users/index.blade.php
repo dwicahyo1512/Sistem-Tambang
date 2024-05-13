@@ -102,15 +102,6 @@
                                         Email</th>
                                     <th
                                         class="px-3.5 py-2.5 font-semibold border-b border-custom-200 dark:border-custom-900">
-                                        Join Date</th>
-                                    <th
-                                        class="px-3.5 py-2.5 font-semibold border-b border-custom-200 dark:border-custom-900">
-                                        Last Login</th>
-                                    <th
-                                        class="px-3.5 py-2.5 font-semibold border-b border-custom-200 dark:border-custom-900">
-                                        Status</th>
-                                    <th
-                                        class="px-3.5 py-2.5 font-semibold border-b border-custom-200 dark:border-custom-900">
                                         Action</th>
                                 </tr>
                             </thead>
@@ -133,12 +124,6 @@
                                         <td class="px-3.5 py-2.5 border-y border-custom-200 dark:border-custom-900">
                                             {{ $user->email }}</td>
                                         <td class="px-3.5 py-2.5 border-y border-custom-200 dark:border-custom-900">
-                                            {{ $user->join_date }}</td>
-                                        <td class="px-3.5 py-2.5 border-y border-custom-200 dark:border-custom-900">
-                                            {{ $user->last_login }}</td>
-                                        <td class="px-3.5 py-2.5 border-y border-custom-200 dark:border-custom-900">
-                                            {{ $user->status }}</td>
-                                        <td class="px-3.5 py-2.5 border-y border-custom-200 dark:border-custom-900">
                                             <a href="{{ route('users.edit', $user->id) }}"
                                                 class="transition-all duration-150 ease-linear text-green-500 hover:text-custom-600">
                                                 <i class="ri-pencil-line"></i> Edit
@@ -147,8 +132,8 @@
                                                 class="inline">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="button" data-modal-target="deleteModal"
-                                                    class="transition-all duration-150 ease-linear text-red-500 hover:text-custom-600">
+                                                <button type="button" onclick="confirmDelete(event)"
+                                                    class="transition-all duration-150 ease-linear text-red-400 hover:text-red-600">
                                                     <i class="ri-delete-bin-line"></i> Delete
                                                 </button>
                                             </form>
@@ -226,6 +211,18 @@
                             class="form-input border-slate-200 dark:border-zink-500 focus:outline-none focus:border-custom-500 disabled:bg-slate-100 dark:disabled:bg-zink-600 disabled:border-slate-300 dark:disabled:border-zink-500 dark:disabled:text-zink-200 disabled:text-slate-500 dark:text-zink-100 dark:bg-zink-700 dark:focus:border-custom-800 placeholder:text-slate-400 dark:placeholder:text-zink-200"
                             placeholder="Enter Username">
                     </div>
+                    <div class="mb-3">
+                        <label for="roles" class="inline-block mb-2 text-base font-medium">roles</label>
+                        <select
+                            class="form-input border-slate-200 dark:border-zink-500 focus:outline-none focus:border-custom-500 disabled:bg-slate-100 dark:disabled:bg-zink-600 disabled:border-slate-300 dark:disabled:border-zink-500 dark:disabled:text-zink-200 disabled:text-slate-500 dark:text-zink-100 dark:bg-zink-700 dark:focus:border-custom-800 placeholder:text-slate-400 dark:placeholder:text-zink-200"
+                            data-choices="" name="roles" id="roles">
+                            <option value="">please choose your Role</option>
+                            @foreach ($roles as $id => $name)
+                                <option value="{{ $name }}">{{ $name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
                     <div class="mb-3">
                         <label for="gender" class="inline-block mb-2 text-base font-medium">Gender</label>
                         <select
@@ -310,6 +307,22 @@
         </script>
     @endif
     <script>
+        function confirmDelete(event) {
+            // console.log(name);
+            event.preventDefault();
+            Swal.fire({
+                title: 'Apa Kamu Yakin?',
+                text: `apakah kamu Yakin Hapus Kendaraan ini?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, Deleted it!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    event.target.form.submit();
+                }
+            });
+        }
         const uploadInput = document.getElementById('upload');
         const filenameLabel = document.getElementById('filename');
         const imagePreview = document.getElementById('image-preview');

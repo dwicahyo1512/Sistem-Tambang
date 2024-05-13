@@ -53,13 +53,13 @@
                                     data-tooltip-content="Total Driver"
                                     class="inline-block align-middle ltr:ml-1 rtl:mr-1 text-slate-500 dark:text-zink-200"><i
                                         data-lucide="info" class="size-4"></i></a></h6>
-                            <div class="relative dropdown shrink-0">
-                                <div class="mb-3">
-                                    <input type="text"
-                                        class="form-input border-slate-200 dark:border-zink-500 focus:outline-none focus:border-custom-500 disabled:bg-slate-100 dark:disabled:bg-zink-600 disabled:border-slate-300 dark:disabled:border-zink-500 dark:disabled:text-zink-200 disabled:text-slate-500 dark:text-zink-100 dark:bg-zink-700 dark:focus:border-custom-800 placeholder:text-slate-400 dark:placeholder:text-zink-200"
-                                        name="select_years_gender" id="select_years_gender" placeholder="Select Years">
-                                </div>
+
+                            <div class="mb-3">
+                                <input type="text"
+                                    class="form-input border-slate-200 dark:border-zink-500 focus:outline-none focus:border-custom-500 disabled:bg-slate-100 dark:disabled:bg-zink-600 disabled:border-slate-300 dark:disabled:border-zink-500 dark:disabled:text-zink-200 disabled:text-slate-500 dark:text-zink-100 dark:bg-zink-700 dark:focus:border-custom-800 placeholder:text-slate-400 dark:placeholder:text-zink-200"
+                                    name="select_years_gender" id="select_years_gender" placeholder="Select Years">
                             </div>
+
                         </div>
                         <div id="dailyVisitInsightsChart" class="apex-charts"
                             data-chart-colors='["bg-green-500", "bg-purple-500"]' dir="ltr"></div>
@@ -94,14 +94,14 @@
                     <div class="card-body">
                         <div class="flex items-center gap-2">
                             <h6 class="mb-3 text-15 grow">Total Kendaraan</h6>
-                            <div class="relative dropdown shrink-0">
+                            
                                 <div class="mb-3">
                                     <input type="text"
                                         class="form-input border-slate-200 dark:border-zink-500 focus:outline-none focus:border-custom-500 disabled:bg-slate-100 dark:disabled:bg-zink-600 disabled:border-slate-300 dark:disabled:border-zink-500 dark:disabled:text-zink-200 disabled:text-slate-500 dark:text-zink-100 dark:bg-zink-700 dark:focus:border-custom-800 placeholder:text-slate-400 dark:placeholder:text-zink-200"
                                         name="select_years_kendaraan" id="select_years_kendaraan"
                                         placeholder="Select Years">
                                 </div>
-                            </div>
+                         
                         </div>
                         <div id="pagesInteraction" class="apex-charts"
                             data-chart-colors='["bg-custom-500", "bg-purple-500"]' dir="ltr"></div>
@@ -237,7 +237,7 @@
             var currentYearkendaraan = new Date().getFullYear(); // Mendapatkan tahun saat ini
             $("#select_years_kendaraan").val(currentYearkendaraan); // Mengatur nilai input ke tahun saat ini
             getDatakendaraan(
-            currentYearkendaraan); // Panggil fungsi untuk mengambil data berdasarkan tahun saat ini
+                currentYearkendaraan); // Panggil fungsi untuk mengambil data berdasarkan tahun saat ini
         });
 
         $("#select_years_kendaraan").change(function() {
@@ -248,7 +248,7 @@
         function getDatakendaraan(year) {
             $.ajax({
                 url: '/datakendaraan/' +
-                year, // Sesuaikan dengan rute di controller Anda, termasuk tahun yang dipilih
+                    year, // Sesuaikan dengan rute di controller Anda, termasuk tahun yang dipilih
                 method: 'GET',
                 success: function(response) {
                     console.log(response);
@@ -318,7 +318,7 @@
                                 show: true,
                                 formatter: function(value) {
                                     return Math.round(
-                                    value);
+                                        value);
                                 }
                             }
                         },

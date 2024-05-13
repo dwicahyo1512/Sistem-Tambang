@@ -19,7 +19,7 @@ Route::get('/dashboard', [HomeController::class, 'index'])
 Route::middleware('auth')->group(function () {
     Route::get('/datagender/{year}', [HomeController::class, 'datagender']);
     Route::get('/datakendaraan/{year}', [HomeController::class, 'datakendaraan']);
-
+    Route::get('/datapool/{year}', [HomeController::class, 'datapool']);
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::post('/updateProfileImage', [ProfileController::class, 'updateProfileImage'])->name('updateProfileImage');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

@@ -35,12 +35,12 @@ class KendaraanController extends Controller
 
         $identitas = 'kendaraan';
         $pool = User::role('pool')->get();
-        $client = User::role('client-users') ->whereNotIn('id', function ($query) {
+        $client = User::role('client-users')->whereNotIn('id', function ($query) {
             $query->select('user_id')
-                  ->from('user_kendaraans');
-        })
-        ->get();
+            ->from('user_kendaraans');
+        })->get();
         $gendermaledate = User::where('gender', 'male')->get();
+        $kendaraans = Kendaraan::paginate(10);
         return view('kendaraan.index', compact('kendaraans', 'identitas', 'pool', 'client'));
     }
 
@@ -93,9 +93,13 @@ class KendaraanController extends Controller
             $client = explode('-', $request->client);
             $clientid = $client[0];
             $clientname = $client[1];
+            $valuepool = explode('-', $request->pool);
+            $poolid = $valuepool[0];
+            $poolname = $valuepool[1];
 
             $kendaraan = Kendaraan::create([
                 'kendaraan_user_id' => $clientid,
+                'pool_id' => $poolid,
                 'nama' => $request->name,
                 'img' => $imageUrl, // Menggunakan $imageUrl
                 'type' => $request->type,
@@ -109,15 +113,13 @@ class KendaraanController extends Controller
 
             $kendaraanId = $kendaraan->id;
 
-            $valuepool = explode('-', $request->pool);
-            $poolid = $valuepool[0];
-            $poolname = $valuepool[1];
+          
 
-            $userkendaraan = UserKendaraan::create([
-                'user_id' => $clientid,
-                'kendaraan_id' => $kendaraanId,
-                'pool_id' => $poolid,
-            ]);
+            // $userkendaraan = UserKendaraan::create([
+            //     'user_id' => $clientid,
+            //     'kendaraan_id' => $kendaraanId,
+            //     'pool_id' => $poolid,
+            // ]);
 
             $riwayatkendaraan = RiwayatKendaraan::create([
                 'kendaraan_id' => $kendaraan->id,
@@ -154,10 +156,8 @@ class KendaraanController extends Controller
     {
         $pool = User::role('pool')->get();
         $client = User::role('client-users')->get();
-        $user = UserKendaraan::where('kendaraan_id', $kendaraan->id)
-            ->with('user', 'pool')
-            ->first();
-        return view('kendaraan.edit', compact('user', 'pool', 'client'));
+        $kendaraan = Kendaraan::where('id', $kendaraan->id)->first();
+        return view('kendaraan.edit', compact('kendaraan', 'pool', 'client'));
     }
 
     /**
@@ -196,6 +196,7 @@ class KendaraanController extends Controller
 
             $kendaraanData = [
                 'kendaraan_user_id' => $clientid,
+                'kpool_id' => $poolid,
                 'nama' => $request->name,
                 'type' => $request->type,
                 'bahan_bakar' => $request->bahan_bakar,
@@ -213,12 +214,12 @@ class KendaraanController extends Controller
 
             $kendaraan->update($kendaraanData);
 
-            $userKendaraan = UserKendaraan::find($kendaraan->id);
+            // $userKendaraan = UserKendaraan::find($kendaraan->id);
 
-            $userKendaraan->update([
-                'user_id' => $clientid,
-                'pool_id' => $poolid,
-            ]);
+            // $userKendaraan->update([
+            //     'user_id' => $clientid,
+            //     'pool_id' => $poolid,
+            // ]);
 
 
             // 
@@ -251,15 +252,15 @@ class KendaraanController extends Controller
     public function destroy(Kendaraan $kendaraan)
     {
         // Hapus relasi dari tabel UserKendaraan yang memiliki kendaraan_id sama dengan id kendaraan yang dihapus
-        UserKendaraan::where('kendaraan_id', $kendaraan->id)->delete();
+        // UserKendaraan::where('kendaraan_id', $kendaraan->id)->delete();
 
         // Hapus kendaraan dari tabel Kendaraan
         $kendaraan->delete();
-    
+
         Toastr::success('Berhasil menghapus kendaraan', 'Success'); // Menampilkan pesan sukses menggunakan Toastr
         return redirect()->route('kendaraans.index');
     }
-    
+
 
     public function setuju(Request $request, $id)
     {

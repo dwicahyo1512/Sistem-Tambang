@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules;
 use Maatwebsite\Excel\Facades\Excel;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -29,8 +31,10 @@ class UserController extends Controller
     public function index()
     {
         $users = User::with('roles')->paginate(10);
-        return view('users.index', compact('users'));
+        $roles = Role::pluck('name', 'id')->toArray(); // Ambil data roles
+        return view('users.index', compact('users', 'roles')); // Kirimkan data roles ke view
     }
+
     public function getUsersData(Request $request)
     {
         //
@@ -195,7 +199,7 @@ class UserController extends Controller
                 'name' => ['required', 'string', 'max:255'],
                 'username' => ['required', 'string', 'max:255', 'unique:' . User::class],
                 'gender' => ['required', 'string'],
-                'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
+                'email' => ['required', 'string', 'email', 'max:255', 'unique:' . User::class],
                 'password' => ['required', 'confirmed', Rules\Password::defaults()],
                 'avatar' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'], // max 2MB
             ], [
@@ -223,7 +227,23 @@ class UserController extends Controller
                 'password' => Hash::make($request->password),
             ]);
 
-            $user->assignRole($defaultRole);
+            $user->assignRole($request->roles);
+            if($request->roles == 'client_users'){
+                $user->givePermissionTo([
+                    'read client_users',
+                ]);
+                
+            }elseif($request->roles == 'pool'){
+                $user->givePermissionTo([
+                    'read client_users',
+                    'read pool',
+                    'create pool',
+                    'update pool',
+                    'delete pool',
+                ]);
+            }else{
+                $user->givePermissionTo(Permission::all());
+            }
 
             return redirect()->back()->with('success', 'User successfully created');
         } catch (ValidationException $e) {
@@ -248,9 +268,10 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        //
-        return view('users.edit', compact('user'));
+        $roles = Role::pluck('name', 'id')->toArray();
+        return view('users.edit', compact('user', 'roles'));
     }
+
 
     /**
      * Update the specified resource in storage.
@@ -290,8 +311,24 @@ class UserController extends Controller
                 $imageUrl = Storage::url($imagePath);
                 $userData['avatar'] = $imageUrl;
             }
-
             $user->update($userData);
+            $user->assignRole($request->roles);
+            if($request->roles == 'client_users'){
+                $user->givePermissionTo([
+                    'read client_users',
+                ]);
+                
+            }elseif($request->roles == 'pool'){
+                $user->givePermissionTo([
+                    'read client_users',
+                    'read pool',
+                    'create pool',
+                    'update pool',
+                    'delete pool',
+                ]);
+            }else{
+                $user->givePermissionTo(Permission::all());
+            }
 
             return redirect()->route('users.index')->with('success', 'User successfully updated.');
         } catch (ValidationException $e) {
@@ -309,6 +346,7 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         $user->delete();
+        Toastr::success('Berhasil menghapus kendaraan', 'Success'); 
         return redirect()->route('users.index');
     }
     public function export()
