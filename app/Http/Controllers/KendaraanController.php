@@ -167,7 +167,7 @@ class KendaraanController extends Controller
     {
         //
 
-
+        // dd($request->all());
         try {
             $request->validate([
                 'client' => ['required'],
@@ -203,7 +203,7 @@ class KendaraanController extends Controller
                 'konsumsi_bbm' => $request->konsumsi_bbm,
                 'jadwal_service' => $date,
                 'keterangan' => $request->keterangan,
-                'status' => 2,
+                'status' => $request->status,
             ];
 
             if ($request->hasFile('img_kendaraan')) {

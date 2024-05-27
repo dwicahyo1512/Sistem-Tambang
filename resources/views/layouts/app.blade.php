@@ -90,7 +90,6 @@
                 </g>
             </svg>
         </div>
-        {!! Toastr::message() !!}
         @yield('content')
 
     </div>

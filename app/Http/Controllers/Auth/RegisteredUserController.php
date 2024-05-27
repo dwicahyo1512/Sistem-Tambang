@@ -69,10 +69,8 @@ class RegisteredUserController extends Controller
 
             $user->assignRole($defaultRole);
             event(new Registered($user));
-
-            Auth::login($user);
-
-            return redirect(route('dashboard', absolute: false));
+            Toastr::success('Berhasil mendaftar! Silakan login.');
+            return redirect(route('login', absolute: false));
         } catch (ValidationException $e) {
             // Mengambil pesan kesalahan dari validasi
             $errors = $e->validator->getMessageBag()->all();

@@ -35,7 +35,7 @@
                                     @if ($kendaraanuser->persetujuan == null)
                                         <span
                                             class="w-full text-white bg-yellow-500 border-yellow-500 btn hover:text-white hover:bg-yellow-600 hover:border-yellow-600 focus:text-white focus:bg-yellow-600 focus:border-yellow-600 focus:ring focus:ring-yellow-100 active:text-white active:bg-yellow-600 active:border-yellow-600 active:ring active:ring-yellow-100 dark:ring-yellow-400/20">
-                                            Menunggu Admin Memilih Kendaraan anda
+                                            Menunggu Konfirmasi Pool
                                         </span>
                                     @elseif ($kendaraanuser->persetujuan == 0)
                                         <span
@@ -76,10 +76,22 @@
                             </div>
 
                             <div class="mt-5">
-                                <h6 class="mb-3 text-15">Kendaraan:</h6>
+                                <h6 class="mb-3 text-15">Detail Kendaraan:</h6>
                                 <div class="overflow-x-auto">
                                     <table class="w-full">
                                         <tbody>
+                                            <tr>
+                                                <th
+                                                    class="px-3.5 py-2.5 font-semibold border-b border-transparent w-64 ltr:text-left rtl:text-right text-slate-500 dark:text-zink-200">
+                                                    Status</th>
+                                                <td class="px-3.5 py-2.5 border-b border-transparent">
+                                                    @if ($kendaraanuser->status == 0)
+                                                        Kendaraan sedang non aktif
+                                                    @elseif ($kendaraanuser->status == 2)
+                                                        Aktif
+                                                    @endif
+                                                </td>
+                                            </tr>
                                             <tr>
                                                 <th
                                                     class="px-3.5 py-2.5 font-semibold border-b border-transparent w-64 ltr:text-left rtl:text-right text-slate-500 dark:text-zink-200">
@@ -120,8 +132,8 @@
                                         <div class="flex items-center gap-3">
                                             <div class="w-10 h-10 rounded-full shrink-0 bg-sky-100 dark:bg-sky-500/20">
                                                 @if (Auth::user()->avatar)
-                                                    <img src="{{ asset('storage/' . Auth::user()->avatar) }}"
-                                                        alt="Avatar" class="h-10 rounded-full">
+                                                    <img src="{{ asset(Auth::user()->avatar) }}" alt="Avatar"
+                                                        class="h-10 rounded-full">
                                                 @elseif (Auth::user()->gender === 'male')
                                                     <img src="{{ asset('assets/images/avatar-2.png') }}" alt="Male Avatar"
                                                         class="h-10 rounded-full">
@@ -131,8 +143,8 @@
                                                 @endif
                                             </div>
                                             <div class="grow">
-                                                <h6 class="text-15"><a href="#!">Aubrey Beer</a></h6>
-                                                <p class="text-sm text-slate-500 dark:text-zink-200">on 14 Jan, 2024</p>
+                                                <h6 class="text-15"><a href="#!">{{ Auth::user()->name }}</a></h6>
+                                                <p class="text-sm text-slate-500 dark:text-zink-200">{{ Auth::user()->created_at }}</p>
                                             </div>
                                         </div>
                                         <div class="mt-5">
