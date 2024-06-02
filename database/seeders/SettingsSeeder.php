@@ -33,7 +33,7 @@ class SettingsSeeder extends Seeder
             ],
             [
                 'key' => 'new_user_default_role',
-                'value' => 'client_users',
+                'value' => 'client-users',
             ],
             [
                 'key' => 'website_language',

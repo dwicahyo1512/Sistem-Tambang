@@ -71,7 +71,8 @@
                                 <option value="">Please choose your Driver</option>
                                 @foreach ($client as $item)
                                     <option value="{{ $item->id }}-{{ $item->name }}"
-                                        {{ $kendaraan->kendaraan_user_id == $item->id ? 'selected' : '' }}>{{ $item->name }}</option>
+                                        {{ $kendaraan->kendaraan_user_id == $item->id ? 'selected' : '' }}>
+                                        {{ $item->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -83,8 +84,19 @@
                                 <option value="">Please choose your Pool</option>
                                 @foreach ($pool as $item)
                                     <option value="{{ $item->id }}-{{ $item->name }}"
-                                        {{ $kendaraan->pool_id == $item->id ? 'selected' : '' }}>{{ $item->name }}</option>
+                                        {{ $kendaraan->pool_id == $item->id ? 'selected' : '' }}>{{ $item->name }}
+                                    </option>
                                 @endforeach
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="status" class="inline-block mb-2 text-base font-medium">Status</label>
+                            <select
+                                class="form-input border-slate-200 dark:border-zink-500 focus:outline-none focus:border-custom-500 disabled:bg-slate-100 dark:disabled:bg-zink-600 disabled:border-slate-300 dark:disabled:border-zink-500 dark:disabled:text-zink-200 disabled:text-slate-500 dark:text-zink-100 dark:bg-zink-700 dark:focus:border-custom-800 placeholder:text-slate-400 dark:placeholder:text-zink-200"
+                                data-choices="" name="status" id="status">
+                                <option value="">Pilih Status</option>
+                                <option value="0" {{ $kendaraan->status == 1 ? 'selected' : '' }}>Non Aktif</option>
+                                <option value="2" {{ $kendaraan->status == 2 ? 'selected' : '' }}>Aktif</option>
                             </select>
                         </div>
                         <div class="mb-3">

@@ -153,7 +153,7 @@
                                         <td class="px-3.5 py-2.5 border-y border-custom-200 dark:border-custom-900">
                                             @if ($kendaraan->status === 0)
                                                 <span
-                                                    class="px-2.5 py-0.5 inline-block text-xs font-medium rounded border bg-ren-100 border-transparent text-ren-500 dark:bg-ren-500/20 dark:border-transparent">Nonaktif</span>
+                                                    class="px-2.5 py-0.5 inline-block text-xs font-medium rounded border bg-red-100 border-transparent text-red-500 dark:bg-red-500/20 dark:border-transparent">Nonaktif</span>
                                             @elseif($kendaraan->status === 1)
                                                 <span
                                                     class="px-2.5 py-0.5 inline-block text-xs font-medium rounded border bg-orange-100 border-transparent text-orange-500 dark:bg-orange-500/20 dark:border-transparent">Tersedia</span>

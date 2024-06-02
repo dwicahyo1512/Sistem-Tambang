@@ -26,7 +26,7 @@
                             <div
                                 class="relative inline-block rounded-full shadow-md size-20 bg-slate-100 profile-user xl:size-28">
                                 @if ($user->avatar)
-                                    <img src="{{ asset('/storage/' . $user->avatar) }}" alt="Avatar"
+                                    <img src="{{ asset( $user->avatar) }}" alt="Avatar"
                                         class="object-cover border-0 rounded-full img-thumbnail user-profile-image"
                                         id="profile-image">
                                 @else
