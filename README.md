@@ -3,7 +3,7 @@
 
 ![App Screenshot](https://github.com/dwicahyo1512/Sistem-Tambang/tree/main/dokumen/Cover.png)
 
-![App Screenshot](https://github.com/dwicahyo1512/Sistem-Tambang/tree/main/dokumen/Cover-1.png)
+![App Screenshot1](https://github.com/dwicahyo1512/Sistem-Tambang/tree/main/dokumen/Cover-1.png)
 
 
 ## Installation
